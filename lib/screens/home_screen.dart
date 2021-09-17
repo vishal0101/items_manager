@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:items_manager/helper/inputmap.dart';
 import 'package:items_manager/widgets/custom_color.dart';
-import 'package:items_manager/widgets/widgets.dart';
+import 'package:items_manager/widgets/widget.dart';
 import 'generated_list.dart';
 
 import 'body.dart';
@@ -32,62 +32,67 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  AppBar buildAppBar(BuildContext context) {
-    return AppBar(
-      title: const Text("Items Manager"),
-      // leading: GestureDetector(onTap: () {}, child: Icon(Icons.menu)),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const GeneratedList()));
-              },
-              icon: const Icon(Icons.assignment)),
-        )
-      ],
-    );
-  }
-
   showDialogCustom(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: const Text("ADD ITEM"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  onChanged: (value) {
-                    itemName = value;
-                  },
-                  decoration: const InputDecoration(hintText: "Name"),
-                ),
-                TextField(
-                  onChanged: (value) {
-                    itemQuantity = value;
-                  },
-                  decoration: const InputDecoration(hintText: "Quantity"),
-                )
-              ],
+            content: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    onChanged: (value) {
+                      itemName = value;
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Enter the name";
+                      }
+                      if (double.tryParse(value) != null) {
+                        return "Name cannot be a number";
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(hintText: "Name"),
+                  ),
+                  TextFormField(
+                    onChanged: (value) {
+                      itemQuantity = value;
+                    },
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Enter the Quantity";
+                      }
+                      if (double.tryParse(value) == null) {
+                        return "Enter a number";
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(hintText: "Quantity"),
+                  )
+                ],
+              ),
             ),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   setState(() {
-                    InputMap.setData(itemName, int.parse(itemQuantity));
-                    Navigator.of(context).pop();
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const HomeScreen()));
+                    if (formKey.currentState!.validate()) {
+                      InputMap.setData(itemName, int.parse(itemQuantity));
+                      Navigator.of(context).pop();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()));
+                    }
                   });
                 },
                 child: const Text("ADD"),
+                style: customTextButtonStyle(),
               ),
             ],
           );

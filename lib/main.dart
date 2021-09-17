@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:items_manager/screens/home_screen.dart';
 import 'package:items_manager/widgets/custom_color.dart';
-import 'package:items_manager/widgets/widgets.dart';
 
 void main() {
   runApp(const MyApp());

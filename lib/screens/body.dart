@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:items_manager/helper/inputmap.dart';
-import 'package:items_manager/widgets/widgets.dart';
+import 'package:items_manager/widgets/listtile_builder.dart';
 
 class Body extends StatefulWidget {
   const Body({Key? key}) : super(key: key);
@@ -12,8 +12,6 @@ class Body extends StatefulWidget {
 class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
-    InputMap.setData("a", 1);
-    InputMap.setData("b", 2);
     var itemKeys = InputMap.item.keys.toList();
 
     return ListView.builder(
@@ -21,9 +19,6 @@ class _BodyState extends State<Body> {
         itemBuilder: (context, index) {
           return listTile(context, itemKeys[index],
               InputMap.item[itemKeys[index]].toString());
-          // ListTile(
-          //   title: Text(InputMap.item[itemKeys[index]].toString()),
-          // );
         });
   }
 }
